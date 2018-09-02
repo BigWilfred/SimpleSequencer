@@ -1,0 +1,98 @@
+.bar{
+    display:flex;
+    flex-direction:row;
+    margin-right: 25px;
+    height: 100%;
+}
+
+.beat{
+    display:flex;
+    flex-direction:column;
+    height:200px;
+}
+.note, .individualVolume{
+    min-width: 50px;
+    min-height: 50px;
+    margin:2px;
+}
+.note{
+    background-color: aquamarine;
+}
+.position{
+    margin-top:10px;
+    min-width: 50px;
+    display:flex;
+    align-items: center;
+}
+.dot{
+    min-width: 10px;
+    min-height: 10px;
+    display: block;
+    margin:0 auto;
+    background-color:;
+    border-radius: 50%;
+}
+.individualVolume input{
+    width: 50px;
+    height:100%;
+    text-align: center;
+    border:none;
+}
+.active{
+    background-color: chartreuse;
+}
+.selected{
+    background-color:red;
+}
+
+#containter{
+    display:inline-flex;
+    min-height:100%;
+    height:100%;
+    width:100%;
+}
+#addBar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    background-color: darkgray;
+}
+#control{
+    display:flex;
+    position:absolute;
+    bottom:15%;
+    border:black solid 2px;
+}
+#control > div{
+    text-align: center;
+    width:100px;
+    height:35px;
+    
+}
+#play{
+    background-color: darkgreen;
+}
+#pause{
+    background-color:orange;
+}
+#stop{
+    background-color:royalblue;
+}
+#clear{
+    background-color:violet;
+}
+#mute{
+    background-color: tomato;
+}
+#time > div{
+    display: inline;
+}
+
+#bpm_slider, #volume_slider{
+    position: absolute;
+    left:10%;
+    bottom:5%;
+}
+#volume_slider{
+    left:30%;
+}
