@@ -1,26 +1,34 @@
+body{
+    margin:0;
+    font-size: 10pt;
+}
+h1{
+    margin: 0;
+}
 .bar{
     display:flex;
     flex-direction:row;
-    margin-right: 25px;
-    height: 100%;
+    margin-right:2.5vh;
+    margin-left:2.5vh;
 }
 
 .beat{
     display:flex;
     flex-direction:column;
-    height:200px;
-}
-.note, .individualVolume{
-    min-width: 50px;
-    min-height: 50px;
-    margin:2px;
 }
 .note{
-    background-color: aquamarine;
+    flex-grow: 1;
+    border:2px solid rgb(233, 233, 233);
+}
+
+.individualVolume{
+    display:block;
+    height:10vh;
+    
 }
 .position{
     margin-top:10px;
-    min-width: 50px;
+    min-width:5vw;
     display:flex;
     align-items: center;
 }
@@ -29,70 +37,151 @@
     min-height: 10px;
     display: block;
     margin:0 auto;
-    background-color:;
     border-radius: 50%;
 }
 .individualVolume input{
-    width: 50px;
-    height:100%;
+    width: 100%;
+    height:100%;;
     text-align: center;
-    border:none;
+    border: none;
+    box-sizing: border-box;
 }
 .active{
     background-color: chartreuse;
 }
 .selected{
-    background-color:red;
+    background-color:aquamarine;
 }
 
-#containter{
+#sequenceContainer{
     display:inline-flex;
-    min-height:100%;
-    height:100%;
     width:100%;
+    justify-content: center;
+    align-content: center;
+    
 }
 #addBar{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    background-color: darkgray;
+
+
+}
+#addBar img{
+    width:5vh;
+    height:100%;
+}
+#controlContainer{
+    width:100vw;
 }
 #control{
     display:flex;
-    position:absolute;
-    bottom:15%;
+    position: fixed;
+    left:30vw;
+    bottom:5vh;
     border:black solid 2px;
+    align-items:center;
+    width:40vw;
+    justify-content: center;
 }
 #control > div{
     text-align: center;
-    width:100px;
-    height:35px;
+    width:6.472vh;
+    height:4vh;
     
 }
-#play{
-    background-color: darkgreen;
+#control img{
+    height:80%;
+    margin-top: 0.5vh
 }
-#pause{
-    background-color:orange;
-}
-#stop{
-    background-color:royalblue;
+#control > div#volume{
+    width:auto;
 }
 #clear{
-    background-color:violet;
+    
 }
-#mute{
-    background-color: tomato;
-}
+
 #time > div{
     display: inline;
 }
-
-#bpm_slider, #volume_slider{
+#volume_slider{
+    width:80%;
+}
+#bpm_slider{
     position: absolute;
     left:10%;
     bottom:5%;
 }
-#volume_slider{
-    left:30%;
+#channelVolume{
+    display: none;
+}
+
+
+#uiGrid{
+    display: flex;
+    flex-direction: column;
+    width:auto;
+    height:auto;
+    margin-left: 1.5vw;
+    margin-right: 1.5vw;
+}
+
+#titleContainer{
+    height:33vh;
+    display: flex;
+    justify-content: center;
+    padding:25px;
+    box-sizing: border-box;
+}
+#titleContainer > div{
+    width:66vw;
+    height:25vh;;
+    background-color: bisque;
+    position: fixed;
+    overflow: hidden;
+}
+#titleContainer h1{
+    text-align: center;
+}
+#tagLine{
+    width: 33vw;
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+.verticalCentre{
+    display: flex;
+
+justify-content: center;
+height: 50vh;
+box-sizing: border-box;
+padding-bottom: 5vh;
+align-content: center;
+}
+#sequencerControls{
+    background-color: bisque;
+    padding-top:4px;
+    padding-bottom:4px;
+    display: flex;
+    position:fixed;
+    right:0;
+    width:1.5vw;
+}
+#sequencerControls > div{
+    flex-grow: 1;
+}
+#sequencerControls > div:first-of-type{
+    align-self: center;
+    justify-items: center;
+}
+#sequencerControls > div:nth-of-type(2){
+    display: none;
+}
+#specificControls{
+    display: none;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width:50%;
+}
+.openDraw{
+    display: flex;
+    height:8vh;
+    align-items: center;
 }

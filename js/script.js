@@ -21,33 +21,41 @@ var testTimer;
 var timeCounter=0;
 
 //number of bars
-var fullBar = 3;
-var timer = new Timer();
+var fullBar = 4;
 var bpm = 120;
 var Ibpm; //interval timing
 
 var positionInBar = 0;
 var positionInLoop = 0;
+var targetCounter = 1;
 var currentlyPlaying = false;
 var currentlyMuted = false;
 
 var barHtml = "<div class='bar'><div class='beat'><div class='note'></div><div class='note'></div><div class='note'></div><div class='note'></div><div class='position'><div class='dot'></div></div></div><div class='beat'><div class='note'></div><div class='note'></div><div class='note'></div><div class='note'></div><div class='position'><div class='dot'></div></div></div><div class='beat'><div class='note'></div><div class='note'></div><div class='note'></div><div class='note'></div><div class='position'><div class='dot'></div></div></div><div class='beat'><div class='note'></div><div class='note'></div><div class='note'></div><div class='note'></div><div class='position'><div class='dot'></div></div></div></div>"
 
 var beatHtml = "<div class='beat' id='channelVolume'></div>";
-var addBarHtml = "<div id='addBar'><div>XXX</div></div>";
+var addBarHtml = "<div id='addBar'><div><img src='img/plus.svg'></div></div>";
 
 $(document).ready(function(){
     createChannelVolumeControls();
     Ibpm = 60000/bpm;
 
     $('body').on('click','#addBar', function(){
-        $('#channelVolume').remove()
-        $(this).parent().append(barHtml);
-        $(this).remove();
+
+
+        $('#sequenceContainer .bar:last-of-type').css('padding-right','0');
         fullBar++;
         calculateLoop(fullBar);
-        $('#containter').append(addBarHtml);
-        createChannelVolumeControls();
+        $('#sequenceContainer').append(barHtml);
+
+        $('#sequenceContainer').css('justify-content', 'left');
+        $('#sequenceContainer .bar:last-of-type').css('padding-right','3vw');
+
+        if(!currentlyPlaying){
+            //scroll to the new bar
+            $('#sequenceContainer .bar:last-of-type').velocity("scroll", { axis: "x" });
+        }
+        
     })
 
     $('body').on("click",'.note', function(){
@@ -56,6 +64,7 @@ $(document).ready(function(){
         }
         else{
             $(this).addClass('selected');
+            playSample(getClickedNote(this));
         }
         if(currentlyPlaying){
             calculateLoop(fullBar);
@@ -63,39 +72,21 @@ $(document).ready(function(){
     });
 
     $('#play').on("click", function(){
-        calculateLoop(fullBar);
-        currentlyPlaying = true;
-        console.log(loop);
-        
-        //500 = 120bpm
-        testTimer = setInterval(function(){
-            //represents total number of intervals
-            timeCounter++;
+        $('#play img').attr('src','img/pause.svg');
+        if(!currentlyPlaying){
+            playLoop();
+        }
+        else{
+            $('#play img').attr('src','img/play.svg');
             stopSamples();
-
-            for(j=0; j < loop[positionInLoop][positionInBar].length; j++){
-                playSample(loop[positionInLoop][positionInBar][j]);
-            }
-            var currentBeat = parseInt(positionInBar)+1;
-            var currentBar = parseInt(positionInLoop)+1;
-            if(positionInBar ==0 && positionInLoop == 0){
-                $('.dot').removeClass('active');
-            }
-            $('div.bar:nth-child('+ currentBar +') > div:nth-child('+ currentBeat+') > div:nth-child(5) > div:nth-child(1)').addClass('active');
-            determinePosition();
-
-            
-        }, Ibpm);
-
-    })
-
-    $('#pause').on('click', function(){
-        stopSamples();
-        clearInterval(testTimer);
-        console.log(secondsToHms(elapsedTime()/1000));
+            clearInterval(testTimer);
+            currentlyPlaying=false;
+        }
     })
 
     $('#stop').on('click',function(){
+        $('#time').html('0:0:0');
+        $('#play img').attr('src','img/play.svg');
         currentlyPlaying = false;
         loop=[];
         positionInBar = 0;
@@ -116,38 +107,66 @@ $(document).ready(function(){
 
     $('body').on('click', '#mute', function(){
         if(!currentlyMuted){
+            $('#mute img').attr('src','test');
             Howler.mute(true);
             currentlyMuted = true;
         }
         else{
+            $('#mute img').attr('src','img/speaker.svg');
             Howler.mute(false);
             currentlyMuted = false;
         }
     })
 
-    $('#bpm_slider').on('change', function(){
-        bpm = sliderBPM($(this).val());
+    $('#bpm input').on('change', function(){
+        bpm = $(this).val();
         timeBetweenBeats = (600/bpm);
         console.log(bpm);
-        console.log(timeBetweenBeats);
+        Ibpm =60000/bpm;
+        clearInterval(testTimer);
+        playLoop();
     })
     $('#volume_slider').on('change', function(){
         Howler.volume($(this).val());
     })
     $('body').on('change', '.individualVolume', function(){
         var controlId = $(this).attr('id');
-        var volumeValue = $('#'+controlId+' input').val();
+        var volumeValue = $('#sequencerControls #'+controlId+' input').val();
         var sampleId = controlId.split('indiv')[1];
+
         console.log(volumeValue);
         sampleFromIndivId(sampleId).volume(volumeValue);
     })
 
-    timer.addEventListener('secondsUpdated', function (e) {
-        $('#hours').html(timer.getTimeValues().hours);
-        $('#minutes').html(':'+timer.getTimeValues().minutes+':');
-        $('#seconds').html(timer.getTimeValues().seconds);
-    })
 });
+
+function playLoop(){
+    calculateLoop(fullBar);
+    console.log(loop);
+    currentlyPlaying = true;
+    testTimer = setInterval(function(){
+        //check to see if window 
+
+        //represents total number of intervals
+        timeCounter++;
+        $('#time').html(secondsToHms(elapsedTime()));
+        stopSamples();
+
+        for(j=0; j < loop[positionInLoop][positionInBar].length; j++){
+            playSample(loop[positionInLoop][positionInBar][j]);
+        }
+        var currentBeat = parseInt(positionInBar)+1;
+        var currentBar = parseInt(positionInLoop)+1;
+        if(positionInBar ==0 && positionInLoop == 0){
+            $('.dot').removeClass('active');
+        }
+        $('div.bar:nth-child('+ currentBar +') > div:nth-child('+ currentBeat+') > div:nth-child(5) > div:nth-child(1)').addClass('active');
+
+        scrollScreen();
+
+        determinePosition();
+    }, Ibpm);
+}
 
 function calculateBarNotes(barNumber){
     var bar =[];
@@ -174,22 +193,24 @@ function calculateLoop(totalBars){
 function playSample(noteCode){
     
     if(noteCode == 1){
-        var playing1 = sample1.play();
-        playingSamples.push(playing1);
+        sample1.play();
     }
     if(noteCode == 2){
-        var playing2 = sample2.play();
-        playingSamples.push(playing2);
+        sample2.play();
     }
     if(noteCode == 3){
-        var playing3 = sample3.play();
-        playingSamples.push(playing3);
+        sample3.play();
     }
     if(noteCode == 4){
-        var playing3 = sample1.play();
-        playingSamples.push(playing4);
+        sample4.play();
     }
     
+}
+function getClickedNote(selector){
+    if($(selector).is(':first-child')) return 1;
+    if($(selector).is(':nth-child(2)')) return 2;
+    if($(selector).is(':nth-child(3)')) return 3;
+    if($(selector).is(':nth-child(4)')) return 4;
 }
 function stopSamples(){
     sample1.stop();
@@ -215,6 +236,18 @@ function determinePosition(){
         
     }
 }
+
+function scrollScreen(){
+    var limit = fullBar*4;
+    if((timeCounter-1) % limit == 0){
+        $('#sequenceContainer').velocity("scroll", { axis: "x" });
+    }
+    //move towards the right as the loop is playing
+    if(positionInLoop > 1 && fullBar >4){
+        $('#sequenceContainer .bar:nth-of-type('+ (positionInLoop - 1) +') .beat:nth-of-type('+(positionInBar+1)+')').velocity("scroll", { axis: "x" });
+    }
+}
+
 function createChannelVolumeControls(){
     $('div.bar:nth-child('+ fullBar +')').append(beatHtml);
 
@@ -222,11 +255,11 @@ function createChannelVolumeControls(){
         var channelVolumeHtml ='<div class="individualVolume" id="indiv'+i+'"><input type="number" min="0.0" max="1.0" step="0.1" val="1.0"></div>';
         $('#channelVolume').append(channelVolumeHtml);
     }
-    
+    $('#channelVolume').append("<div class='position'><div class='dot'></div></div>");
 }
-//returns the total amount of milliseconds that have elapsed since starting.
+//returns the total amount of seconds that have elapsed since starting.
 function elapsedTime(){
-    var totalElapsedTimer = timeCounter*Ibpm;
+    var totalElapsedTimer = timeCounter*Ibpm/1000;
     return totalElapsedTimer;
 }
 function secondsToHms(d) {
@@ -238,7 +271,9 @@ function secondsToHms(d) {
     var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
     var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
     var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-    return hDisplay + mDisplay + sDisplay; 
+    //return hDisplay + mDisplay + sDisplay; 
+    var display = h+":"+m+":"+s;
+    return display;
 }
 function sliderBPM(value){
     if(value == 4) return 600;
