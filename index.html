@@ -4,8 +4,9 @@
     <head>
             <title>Obnovious Recorder</title>
             <meta charset="UTF-8">
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
             <link href="css/style.css" type="text/css" rel="stylesheet"/>
+            <script type="text/javascript" src='js/jquery.js'></script>
+            
             <script type="text/javascript" src="js/howler.core.js"></script>
             <script type="text/javascript" src='js/velocity.js'></script>
             
@@ -16,7 +17,7 @@
         <div id='uiGrid'>
             <div id='titleContainer'>
                 <div>
-                    <h1>Title</h1> 
+                    <h1>Recorder Revenge</h1> 
                     <div id='tagLine'>
                         <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent eu vulputate ligula, in lacinia ante. Duis imperdiet nunc felis, vel maximus augue semper ut. Donec tincidunt justo eu tellus scelerisque bibendum. Quisque a aliquet lectus, in tincidunt tortor.</p>
                     </div>
@@ -176,11 +177,7 @@
                         <div><div class="individualVolume" id="indiv3"><input type="number" min="0.0" max="1.0" step="0.1" val="1.0"></div></div>
                         <div><div class="individualVolume" id="indiv4"><input type="number" min="0.0" max="1.0" step="0.1" val="1.0"></div></div>
                     </div>
-                    <div id='specificControls'>
-                        <div id='addBar'>ADD</div>
-                        <div id='clear'>Clear</div>
-                        <div id='bpm'><input type='number'></div>
-                    </div>
+                    
                 </div>
             </div>
             
@@ -189,10 +186,19 @@
         <div id='controlContainer'>
 
             <div id='control'>
+
+                <div id='addBar'>ADD</div>
+                <div id='clear'>Clear</div>
                 <div id='play'><img src='img/play.svg'/></div>
                 <div id='stop'><img src='img/stop.svg'/></div>
+                <div id='bpm'>BPM</div>
                 <div id='mute'><img src='img/speaker.svg'/></div>
-                <div id='volume'><input type="range" name="volume_slider" id='volume_slider' min="0.0" max="1.0" step='0.01'></div>
+                <div id=globalVolume>
+                    <input type="range" name="volume_slider" id='volume_slider' min="0.0" max="1.0" step='0.01'>
+                </div>
+                <div id='time'>0:0:0</div>
+                <!--<div>BPM</div>
+                <div id='bpm'><input type="range" name="bpm_slider" id='volume_slider' min="0.0" max="1.0" step='0.01'></div>-->
             </div>
 
         </div>

@@ -1,11 +1,12 @@
 var sequencerControlsOut = false;
 
+
 $(document).ready(function(){
     $('body').on('click', '#opener', function(){
         if(!sequencerControlsOut){
             $('#sequencerControls > div:nth-of-type(2)').css('display', 'flex');
             $('#specificControls').css('display', 'flex');
-            $('#sequencerControls').velocity({width:'8vw'});
+            $('#sequencerControls').velocity({width:'4.5vw'});
             sequencerControlsOut = true;
         }
         else{
@@ -15,4 +16,6 @@ $(document).ready(function(){
             sequencerControlsOut = false;
         }
     })
+
+    
 })

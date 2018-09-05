@@ -1,17 +1,17 @@
 var sample1 = new Howl({
-    src: ['sounds/bass.wav'],
+    src: ['sounds/1.wav'],
     preload:true
 });
 var sample2 = new Howl({
-    src: ['sounds/hat.wav'],
+    src: ['sounds/2.wav'],
     preload:true
 });
 var sample3 = new Howl({
-    src: ['sounds/snare.wav'],
+    src: ['sounds/3.wav'],
     preload:true
 });
 var sample4 = new Howl({
-    src: ['sounds/snare2.wav'],
+    src: ['sounds/4.wav'],
     preload:true
 });
 var playingSamples = [];
@@ -40,6 +40,11 @@ $(document).ready(function(){
     createChannelVolumeControls();
     Ibpm = 60000/bpm;
 
+    //sets the starting value of the volume sliders
+    $('#volume_slider').val(1.0);
+    $('.individualVolume input').val(1.0);
+
+
     $('body').on('click','#addBar', function(){
 
 
@@ -61,14 +66,19 @@ $(document).ready(function(){
     $('body').on("click",'.note', function(){
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
+
         }
         else{
             $(this).addClass('selected');
-            playSample(getClickedNote(this));
+            if(!currentlyPlaying){
+                playSample(getClickedNote(this));
+            }
+            
         }
         if(currentlyPlaying){
             calculateLoop(fullBar);
         }
+        
     });
 
     $('#play').on("click", function(){
@@ -85,7 +95,7 @@ $(document).ready(function(){
     })
 
     $('#stop').on('click',function(){
-        $('#time').html('0:0:0');
+        $('div#time').html('0:0:0');
         $('#play img').attr('src','img/play.svg');
         currentlyPlaying = false;
         loop=[];
@@ -149,7 +159,7 @@ function playLoop(){
 
         //represents total number of intervals
         timeCounter++;
-        $('#time').html(secondsToHms(elapsedTime()));
+        $('div#time').html(secondsToHms(elapsedTime()));
         stopSamples();
 
         for(j=0; j < loop[positionInLoop][positionInBar].length; j++){
